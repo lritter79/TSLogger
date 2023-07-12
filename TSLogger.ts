@@ -57,7 +57,7 @@ export default class Logger {
   private constructor() {}
 
   // Object to store log file paths
-  private static _pathes: {
+  private static _paths: {
     main?: string;
     error?: string;
   } = {
@@ -91,7 +91,7 @@ export default class Logger {
     switch (type) {
       case LogType.ERROR:
         // Appending the log message to the error log file
-        fs.appendFileSync(this._pathes.error, logMsg);
+        fs.appendFileSync(this._paths.error, logMsg);
         // Printing the error message to the console with the specified style or default style
         console.error(
           (options?.style || textStyles.BgRed + textStyles.FgBlack) +
@@ -102,7 +102,7 @@ export default class Logger {
 
       default:
         // Appending the log message to the main log file
-        fs.appendFileSync(this._pathes.main, logMsg);
+        fs.appendFileSync(this._paths.main, logMsg);
         // Determining the console output based on the log type and printing it to the console
         const consoleOutput = type === LogType.MAIN ? mainText : headerText;
         console.log(consoleOutput);
@@ -110,22 +110,22 @@ export default class Logger {
   }
 
   // Setter for updating the log file paths
-  public static set pathes(pathes: { main?: string; error?: string }) {
+  public static set paths(pathes: { main?: string; error?: string }) {
     // If the main log file path is provided, update the main path; otherwise, use default path
-    this._pathes.main =
+    this._paths.main =
       pathes.main !== undefined
         ? pathes.main
         : LogType.MAIN.concat(LogFormat.LOG);
 
     // If the error log file path is provided, update the error path; otherwise, use default path
-    this._pathes.error =
+    this._paths.error =
       pathes.error !== undefined
         ? pathes.error
         : LogType.ERROR.concat(LogFormat.LOG);
   }
 
   // Getter for accessing the log file paths
-  public static get pathes() {
-    return this._pathes;
+  public static get paths() {
+    return this._paths;
   }
 }

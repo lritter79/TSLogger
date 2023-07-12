@@ -18,6 +18,6 @@
     "typeRoots": ["node_modules/@types/"],
     "types": ["node"]
   },
-  "include": ["./Logger.ts"],
+  "include": ["TSLogger.ts"],
   "exclude": ["node_modules", "__tests__"]
 }

@@ -1,6 +1,5 @@
 import fs from "fs";
-
-export type ConsoleStyle = string;
+import { ConsoleStyle, LogType, LogFormat } from "./index.d";
 
 export const textStyles = {
   Reset: <ConsoleStyle>"\x1b[0m",
@@ -39,27 +38,14 @@ let LoggerOptions = {
   spaceKey: " ",
 };
 
-// Enum for different log types
-export enum LogType {
-  ERROR = "error",
-  MAIN = "main",
-  HEADER = "header",
-}
-
-// Enum for log file formats
-enum LogFormat {
-  LOG = ".log",
-  CSV = ".csv",
-}
-
 // Exporting Logger class as the default export
 export default class Logger {
   private constructor() {}
 
   // Object to store log file paths
   private static _paths: {
-    main?: string;
-    error?: string;
+    main: string;
+    error: string;
   } = {
     main: LogType.MAIN.concat(LogFormat.LOG),
     error: LogType.ERROR.concat(LogFormat.LOG),

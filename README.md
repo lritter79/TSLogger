@@ -7,7 +7,7 @@ TSLogger is a TypeScript library that provides logging functionality with custom
 To use TSLogger in your TypeScript project, you can install it via npm:
 
 ```shell
-npm install ts-logger
+npm install ts-logger-node
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm install ts-logger
 Import the necessary modules and initialize the LoggerOptions object with default values:
 
 ```typescript
-import Logger, { LogType } from "ts-logger";
+import Logger, { LogType } from "ts-logger-node";
 ```
 
 Print log messages using the `print` method:
@@ -39,7 +39,7 @@ Logger.paths = {
 The library provides a set of predefined console styles in the `textStyles` object. You can use these styles to format log messages printed to the console. For example:
 
 ```typescript
-import Logger, { LogType, textStyles } from "ts-logger";
+import Logger, { LogType, textStyles } from "ts-logger-node";
 
 Logger.print("Formatted message", LogType.MAIN, {
   style: textStyles.FgRed + textStyles.BgYellow,

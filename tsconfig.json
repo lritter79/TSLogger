@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "skipLibCheck": true,
+    "removeComments": true,
+    "noEmitOnError": true,
+    "strict": false,
+    "alwaysStrict": false,
+    "noImplicitAny": false,
+    "typeRoots": ["node_modules/@types/"],
+    "types": ["node"]
+  },
+  "include": ["./Logger.ts"],
+  "exclude": ["node_modules", "__tests__"]
+}

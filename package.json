@@ -1,0 +1,16 @@
+{
+  "name": "tslogger",
+  "version": "0.0.1",
+  "description": "Customize console logs and output logs to files locally.",
+  "main": "dist/Logger.js",
+  "scripts": {
+    "dev": "tsc; node .;"
+  },
+  "author": "Tyler Swindell",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.1",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6"
+  }
+}

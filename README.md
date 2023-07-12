@@ -25,10 +25,10 @@ Logger.print("Hello, world!", LogType.MAIN);
 Logger.print("An error occurred.", LogType.ERROR);
 ```
 
-By default, log messages are appended to the main log file and printed to the console with the specified log type. You can customize the log file paths using the `pathes` setter:
+By default, log messages are appended to the main log file and printed to the console with the specified log type. You can customize the log file paths using the `paths` setter:
 
 ```typescript
-Logger.pathes = {
+Logger.paths = {
   main: "./logs/main.log",
   error: "./logs/error.log",
 };
@@ -48,10 +48,10 @@ Logger.print("Formatted message", LogType.MAIN, {
 
 ### Customizing Log File Paths
 
-By default, log messages are appended to the main log file (main.log) and error log file (error.log) in the current working directory. You can specify custom file paths using the `pathes` setter:
+By default, log messages are appended to the main log file (main.log) and error log file (error.log) in the current working directory. You can specify custom file paths using the `paths` setter:
 
 ```typescript
-Logger.pathes = {
+Logger.paths = {
   main: "./logs/main.log",
   error: "./logs/error.log",
 };

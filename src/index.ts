@@ -5,7 +5,7 @@ import {
   LogReturnType,
   textStyles,
   FilePath,
-} from "./index.d";
+} from "./types";
 
 // Initializing LoggerOptions object with default values
 let LoggerOptions = {

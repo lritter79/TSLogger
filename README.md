@@ -1,19 +1,19 @@
-# ts-logger-node
+# TS-Node-Logger
 
-ts-logger-node is a Node.js logging package that provides a simple yet powerful logging mechanism with customizable log file paths and console output styles. This package is written in TypeScript and comes with type definitions for enhanced development experience.
+ts-node-logger is a Node.js logging package that provides a simple yet powerful logging mechanism with customizable log file paths and console output styles. This package is written in TypeScript and comes with type definitions for enhanced development experience.
 
 ## Installation
 
-To install ts-logger-node, you can use npm or yarn:
+To install ts-node-logger, you can use npm or yarn:
 
 ```bash
-npm install ts-logger-node
+npm install  ts-node-logger
 ```
 
 or
 
 ```bash
-yarn add ts-logger-node
+yarn add ts-node-logger
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ yarn add ts-logger-node
 To use the logger, import it into your project:
 
 ```javascript
-import Logger from "ts-logger-node";
+import Logger from " ts-node-logger";
 ```
 
 ### Logging Messages
@@ -74,7 +74,7 @@ The `print` method returns a `LogReturnType` that indicates the status of the lo
 The package also exports a `textStyles` object, which provides a set of ANSI escape sequences for styling the console output. You can use these styles in the `options.style` property to customize the appearance of log messages.
 
 ```javascript
-import { textStyles } from "ts-logger-node";
+import { textStyles } from " ts-node-logger";
 
 console.log(textStyles.FgBlue + "This text will be blue!" + textStyles.Reset);
 console.log(
@@ -87,7 +87,7 @@ console.log(
 
 ## Contributing
 
-If you find any issues with ts-logger-node or want to contribute improvements or new features, please feel free to open an issue or submit a pull request on the GitHub repository.
+If you find any issues with ts-node-logger or want to contribute improvements or new features, please feel free to open an issue or submit a pull request on the GitHub repository.
 
 ## License
 

@@ -1,117 +1,119 @@
-// import fs from "fs";
-// import { ConsoleStyle, LogType, LogFormat } from "./index.d";
+import fs from "fs";
+import {
+  ConsoleStyle,
+  LogType,
+  LogFormat,
+  LogReturnType,
+  textStyles,
+  FilePath,
+} from "./index.d";
 
-// export const textStyles = {
-//   Reset: <ConsoleStyle>"\x1b[0m",
-//   Bright: <ConsoleStyle>"\x1b[1m",
-//   Dim: <ConsoleStyle>"\x1b[2m",
-//   Underscore: <ConsoleStyle>"\x1b[4m",
-//   Blink: <ConsoleStyle>"\x1b[5m",
-//   Reverse: <ConsoleStyle>"\x1b[7m",
-//   Hidden: <ConsoleStyle>"\x1b[8m",
-//   NewLine: <ConsoleStyle>"\n",
+// Initializing LoggerOptions object with default values
+let LoggerOptions = {
+  delimeter: ",",
+  spaceKey: " ",
+};
 
-//   FgBlack: <ConsoleStyle>"\x1b[30m",
-//   FgRed: <ConsoleStyle>"\x1b[31m",
-//   FgGreen: <ConsoleStyle>"\x1b[32m",
-//   FgYellow: <ConsoleStyle>"\x1b[33m",
-//   FgBlue: <ConsoleStyle>"\x1b[34m",
-//   FgMagenta: <ConsoleStyle>"\x1b[35m",
-//   FgCyan: <ConsoleStyle>"\x1b[36m",
-//   FgWhite: <ConsoleStyle>"\x1b[37m",
-//   FgGray: <ConsoleStyle>"\x1b[90m",
+// Exporting Logger class as the default export
+export default class Logger {
+  private constructor() {}
 
-//   BgBlack: <ConsoleStyle>"\x1b[40m",
-//   BgRed: <ConsoleStyle>"\x1b[41m",
-//   BgGreen: <ConsoleStyle>"\x1b[42m",
-//   BgYellow: <ConsoleStyle>"\x1b[43m",
-//   BgBlue: <ConsoleStyle>"\x1b[44m",
-//   BgMagenta: <ConsoleStyle>"\x1b[45m",
-//   BgCyan: <ConsoleStyle>"\x1b[46m",
-//   BgWhite: <ConsoleStyle>"\x1b[47m",
-//   BgGray: <ConsoleStyle>"\x1b[100m",
-// };
+  // Object to store log file paths
+  private static _paths: {
+    main: FilePath;
+    error: FilePath;
+  } = {
+    main: {
+      dir: "logs/",
+      fileName: "main",
+      fileExt: ".log",
+    },
+    error: {
+      dir: "logs/",
+      fileName: "error",
+      fileExt: ".log",
+    },
+  };
+  private static generatePath = (fileInfo: FilePath): string => {
+    return fileInfo.dir.concat(fileInfo.fileName).concat(fileInfo.fileExt);
+  };
 
-// // Initializing LoggerOptions object with default values
-// let LoggerOptions = {
-//   delimeter: ",",
-//   spaceKey: " ",
-// };
+  private static generateLogMessage = (msg: string) => {
+    return (
+      new Date().toISOString() +
+      LoggerOptions.delimeter +
+      msg +
+      LoggerOptions.delimeter +
+      textStyles.NewLine
+    );
+  };
 
-// // Exporting Logger class as the default export
-// export default class Logger {
-//   private constructor() {}
+  // Function to print log messages
+  public static print(
+    msg: string,
+    type: LogType,
+    options?: { style?: ConsoleStyle }
+  ): LogReturnType {
+    let returnCode = "SUCCESS_LOG" as LogReturnType;
+    // Creating a formatted log message with timestamp, message, and a newline character
+    const logMsg = this.generateLogMessage(msg);
 
-//   // Object to store log file paths
-//   private static _paths: {
-//     main: string;
-//     error: string;
-//   } = {
-//     main: LogType.MAIN.concat(LogFormat.LOG),
-//     error: LogType.ERROR.concat(LogFormat.LOG),
-//   };
+    // Assigning styles based on options or default styles
+    const headerStyle =
+        options?.style || textStyles.BgGreen + textStyles.FgBlack,
+      mainStyle = options?.style || textStyles.FgCyan;
 
-//   // Function to print log messages
-//   public static print(
-//     msg: string,
-//     type: LogType,
-//     options?: { style?: ConsoleStyle }
-//   ) {
-//     // Creating a formatted log message with timestamp, message, and a newline character
-//     const logMsg =
-//       new Date().toISOString() +
-//       LoggerOptions.delimeter +
-//       msg +
-//       LoggerOptions.delimeter +
-//       textStyles.NewLine;
+    // Creating formatted header and main text with respective styles
+    const headerText = headerStyle + msg + textStyles.Reset,
+      mainText = mainStyle + msg + textStyles.Reset;
 
-//     // Assigning styles based on options or default styles
-//     const headerStyle =
-//         options?.style || textStyles.BgGreen + textStyles.FgBlack,
-//       mainStyle = options?.style || textStyles.FgCyan;
+    switch (type) {
+      case "error":
+        try {
+          const errorLogPath = this.generatePath(this._paths.error);
+          // Appending the log message to the error log file
+          fs.appendFileSync(errorLogPath, logMsg);
+          // Printing the error message to the console with the specified style or default style
+          console.error(
+            (options?.style || textStyles.BgRed + textStyles.FgBlack) +
+              msg +
+              textStyles.Reset
+          );
+          returnCode = "ERROR_LOG" as LogReturnType;
+        } catch (err) {
+          console.error(err);
+          returnCode = "FILE_WRITE_ERROR" as LogReturnType;
+        }
+        break;
 
-//     // Creating formatted header and main text with respective styles
-//     const headerText = headerStyle + msg + textStyles.Reset,
-//       mainText = mainStyle + msg + textStyles.Reset;
+      default:
+        const mainLogPath = this.generatePath(this._paths.main),
+          mainLogDir = this._paths.main.dir;
 
-//     switch (type) {
-//       case LogType.ERROR:
-//         // Appending the log message to the error log file
-//         fs.appendFileSync(this._paths.error, logMsg);
-//         // Printing the error message to the console with the specified style or default style
-//         console.error(
-//           (options?.style || textStyles.BgRed + textStyles.FgBlack) +
-//             msg +
-//             textStyles.Reset
-//         );
-//         break;
+        // Appending the log message to the main log file
+        if (fs.existsSync(mainLogDir)) fs.appendFileSync(mainLogPath, logMsg);
+        else {
+          fs.mkdirSync(this._paths.main.dir);
+          fs.appendFileSync(mainLogPath, logMsg);
+        }
+        // Determining the console output based on the log type and printing it to the console
+        const consoleOutput = type === "main" ? mainText : headerText;
+        console.log(consoleOutput);
+    }
 
-//       default:
-//         // Appending the log message to the main log file
-//         fs.appendFileSync(this._paths.main, logMsg);
-//         // Determining the console output based on the log type and printing it to the console
-//         const consoleOutput = type === LogType.MAIN ? mainText : headerText;
-//         console.log(consoleOutput);
-//     }
-//   }
+    return returnCode;
+  }
 
-//   // Setter for updating the log file paths
-//   public static set paths(pathes: { main?: string; error?: string }) {
-//     // If the main log file path is provided, update the main path; otherwise, use default path
-//     this._paths.main =
-//       pathes.main !== undefined
-//         ? pathes.main
-//         : LogType.MAIN.concat(LogFormat.LOG);
+  // Setter for updating the log file paths
+  public static set paths(paths: { main?: FilePath; error?: FilePath }) {
+    // If the main log file path is provided, update the main path
+    if (paths.main !== undefined) this._paths.main = paths.main;
+    // If the main log file path is provided, update the main path
+    if (paths.error !== undefined) this._paths.error = paths.error;
+  }
 
-//     // If the error log file path is provided, update the error path; otherwise, use default path
-//     this._paths.error =
-//       pathes.error !== undefined
-//         ? pathes.error
-//         : LogType.ERROR.concat(LogFormat.LOG);
-//   }
-
-//   // Getter for accessing the log file paths
-//   public static get paths() {
-//     return this._paths;
-//   }
-// }
+  // Getter for accessing the log file paths
+  public static get paths() {
+    return this._paths;
+  }
+}

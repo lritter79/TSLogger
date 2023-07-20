@@ -1,5 +1,5 @@
 ---
-"ts-node-logger": major
+"ts-logger-node": major
 ---
 
 Inital Release

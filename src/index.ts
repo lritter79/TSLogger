@@ -53,7 +53,7 @@ export default class Logger {
     type: LogType,
     options?: { style?: ConsoleStyle }
   ): LogReturnType {
-    let returnCode = "SUCCESS_LOG" as LogReturnType;
+    let returnCode = <LogReturnType>"SUCCESS_LOG";
     // Creating a formatted log message with timestamp, message, and a newline character
     const logMsg = this.generateLogMessage(msg);
 
@@ -78,10 +78,10 @@ export default class Logger {
               msg +
               textStyles.Reset
           );
-          returnCode = "ERROR_LOG" as LogReturnType;
+          returnCode = <LogReturnType>"ERROR_LOG";
         } catch (err) {
           console.error(err);
-          returnCode = "FILE_WRITE_ERROR" as LogReturnType;
+          returnCode = <LogReturnType>"FILE_WRITE_ERROR";
         }
         break;
 

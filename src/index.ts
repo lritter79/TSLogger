@@ -2,7 +2,6 @@ import fs from "fs";
 import {
   ConsoleStyle,
   LogType,
-  LogFormat,
   LogReturnType,
   textStyles,
   FilePath,

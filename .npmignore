@@ -1,4 +1,6 @@
+.prettierrc
 .changeset
 .github
 src
 tsconfig.json
+logs

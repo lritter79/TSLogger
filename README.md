@@ -28,10 +28,10 @@ import Logger from " ts-logger-node";
 
 ### Logging Messages
 
-You can log messages with different types: `error`, `main`, or `header`. The `print` method is used to log messages, and it takes three arguments:
+You can log messages with different types: `ERROR`, `GENERAL`, or `HEADER`. The `print` method is used to log messages, and it takes three arguments:
 
 - `msg` (string): The log message you want to write.
-- `type` (LogType): The log type, which can be `"error"`, `"main"`, or `"header"`.
+- `type` (LogType): The log type, which can be `"ERROR"`, `"GENERAL"`, or `"HEADER"`.
 - `options` (optional object): Additional options for styling the console output. It contains a `style` property (string) that accepts ANSI escape sequences for colors and other text styles.
 
 ```javascript

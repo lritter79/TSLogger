@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { Logger } from "./Logger";
+import Logger from "./index";
 import { LogType, LogReturnType } from "./types";
 
 describe("Whatever", () => {

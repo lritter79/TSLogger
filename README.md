@@ -35,22 +35,24 @@ You can log messages with different types: `ERROR`, `GENERAL`, or `HEADER`. The 
 - `options` (optional object): Additional options for styling the console output. It contains a `style` property (string) that accepts ANSI escape sequences for colors and other text styles.
 
 ```javascript
-Logger.print("This is an error message", "error");
-Logger.print("This is a main message", "main", { style: Logger.paths.error });
-Logger.print("This is a header message", "header", {
-  style: Logger.paths.main,
+Logger.print("This is an error message", "ERROR");
+Logger.print("This is a general message", "GENERAL", {
+  style: Logger.paths.error,
+});
+Logger.print("This is a header message", "HEADER", {
+  style: Logger.BgBlue,
 });
 ```
 
 ### Customizing Log File Paths
 
-By default, the log files are stored in the "logs" directory with filenames "main.log" and "error.log". You can customize these file paths using the `paths` setter:
+By default, the log files are stored in the "logs" directory with filenames "general.log" and "error.log". You can customize these file paths using the `paths` setter:
 
 ```javascript
 Logger.paths = {
-  main: {
+  general: {
     dir: "custom-logs/",
-    fileName: "custom-main",
+    fileName: "custom-general",
     fileExt: ".log",
   },
   error: {

@@ -14,12 +14,12 @@ class Logger {
 
   // Object to store log file paths
   private static _paths: {
-    main: FilePath;
+    general: FilePath;
     error: FilePath;
   } = {
-    main: {
+    general: {
       dir: "logs/",
-      fileName: "main",
+      fileName: "general",
       fileExt: ".log",
     },
     error: {
@@ -55,11 +55,11 @@ class Logger {
     // Assigning styles based on options or default styles
     const headerStyle =
         options?.style || textStyles.BgGreen + textStyles.FgBlack,
-      mainStyle = options?.style || textStyles.FgCyan;
+      gneralStyle = options?.style || textStyles.FgCyan;
 
-    // Creating formatted header and main text with respective styles
+    // Creating formatted header and general text with respective styles
     const headerText = headerStyle + msg + textStyles.Reset,
-      mainText = mainStyle + msg + textStyles.Reset;
+      generalText = gneralStyle + msg + textStyles.Reset;
 
     switch (type) {
       case "ERROR":
@@ -81,17 +81,18 @@ class Logger {
         break;
 
       default:
-        const mainLogPath = this.generatePath(this._paths.main),
-          mainLogDir = this._paths.main.dir;
+        const generalLogPath = this.generatePath(this._paths.general),
+          generalLogDir = this._paths.general.dir;
 
-        // Appending the log message to the main log file
-        if (fs.existsSync(mainLogDir)) fs.appendFileSync(mainLogPath, logMsg);
+        // Appending the log message to the general log file
+        if (fs.existsSync(generalLogDir))
+          fs.appendFileSync(generalLogPath, logMsg);
         else {
-          fs.mkdirSync(this._paths.main.dir);
-          fs.appendFileSync(mainLogPath, logMsg);
+          fs.mkdirSync(this._paths.general.dir);
+          fs.appendFileSync(generalLogPath, logMsg);
         }
         // Determining the console output based on the log type and printing it to the console
-        const consoleOutput = type === "GENERAL" ? mainText : headerText;
+        const consoleOutput = type === "GENERAL" ? generalText : headerText;
         console.log(consoleOutput);
     }
 
@@ -99,10 +100,10 @@ class Logger {
   }
 
   // Setter for updating the log file paths
-  public static set paths(paths: { main?: FilePath; error?: FilePath }) {
-    // If the main log file path is provided, update the main path
-    if (paths.main !== undefined) this._paths.main = paths.main;
-    // If the main log file path is provided, update the main path
+  public static set paths(paths: { general?: FilePath; error?: FilePath }) {
+    // If the general log file path is provided, update the general path
+    if (paths.general !== undefined) this._paths.general = paths.general;
+    // If the general log file path is provided, update the general path
     if (paths.error !== undefined) this._paths.error = paths.error;
   }
 

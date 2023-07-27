@@ -37,10 +37,10 @@ You can log messages with different types: `ERROR`, `GENERAL`, or `HEADER`. The 
 ```javascript
 Logger.print("This is an error message", "ERROR");
 Logger.print("This is a general message", "GENERAL", {
-  style: Logger.paths.error,
+  style: textStyles.FgGreen,
 });
 Logger.print("This is a header message", "HEADER", {
-  style: Logger.BgBlue,
+  style: textStyles.BgBlue,
 });
 ```
 
@@ -76,15 +76,16 @@ The `print` method returns a `LogReturnType` that indicates the status of the lo
 The package also exports a `textStyles` object, which provides a set of ANSI escape sequences for styling the console output. You can use these styles in the `options.style` property to customize the appearance of log messages.
 
 ```javascript
-import { textStyles } from " ts-logger-node";
+import Logger, { textStyles } from " ts-logger-node";
 
-console.log(textStyles.FgBlue + "This text will be blue!" + textStyles.Reset);
-console.log(
-  textStyles.BgRed +
-    textStyles.FgWhite +
-    "White text on red background!" +
-    textStyles.Reset
-);
+Logger.print("This text will be blue!", "GENERAL", {
+  style: textStyles.FgBlue,
+});
+Logger.print("White text on red background!", "GENERAL", {
+  styles: {
+    style: textStyles.BgRed + textStyles.FgWhite,
+  },
+});
 ```
 
 ## Contributing
@@ -93,4 +94,4 @@ If you find any issues with ts-logger-node or want to contribute improvements or
 
 ## License
 
-This package is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This package is licensed under the MIT License. See the .LICENSE file for details.

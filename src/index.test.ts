@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import Logger from "./index";
+import Logger, { textStyles } from "./index";
 import { LogType, LogReturnType } from "./types";
 
 describe("Whatever", () => {
@@ -17,5 +17,15 @@ describe("Testing successful log file writing and log to terminal", () => {
 describe("Testing successful log file writing and ", () => {
   it("should return LogReturnType.ERROR_LOG => 2", () => {
     expect(Logger.print("Big Error", "ERROR")).toBe("ERROR_LOG");
+  });
+});
+
+describe("Testing successful log file writing and ", () => {
+  it("should return LogReturnType.ERROR_LOG => 2", () => {
+    expect(
+      Logger.print("Big Error", "ERROR", {
+        style: textStyles.BgRed + textStyles.FgWhite,
+      })
+    ).toBe("ERROR_LOG");
   });
 });

@@ -24,7 +24,7 @@ describe("Testing successful log file writing and ", () => {
   it("should return LogReturnType.ERROR_LOG => 2", () => {
     expect(
       Logger.print("Big Error", "ERROR", {
-        style: textStyles.BgRed + textStyles.FgWhite,
+        style: textStyles.BgCyan + textStyles.FgRed,
       })
     ).toBe("ERROR_LOG");
   });

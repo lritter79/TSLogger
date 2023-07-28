@@ -2,17 +2,24 @@ import fs from "fs";
 import { ConsoleStyle, LogType, LogReturnType, FilePath } from "./types";
 import { textStyles } from "./textStyles";
 
-// Initializing LoggerOptions object with default values
 let LoggerOptions = {
   delimeter: ",",
   spaceKey: " ",
 };
 
-// Exporting Logger class as the default export
+/**
+ * The Logger class provides logging functionality and manages log file paths.
+ * This is a singleton class, meaning only one instance of the class can exist.
+ */
 class Logger {
   private constructor() {}
 
-  // Object to store log file paths
+  /**
+   * Object to store log file paths for the 'general' and 'error' logs.
+   * The initial values are set using string concatenation with default log file properties.
+   * @type {Object.<string, FilePath>}
+   * @private
+   */
   private static _paths: {
     general: FilePath;
     error: FilePath;
@@ -28,10 +35,23 @@ class Logger {
       fileExt: ".log",
     },
   };
+
+  /**
+   * Generate a log file path based on the provided file info.
+   * @param {FilePath} fileInfo - Object containing directory, filename, and file extension.
+   * @returns {string} The generated log file path.
+   * @private
+   */
   private static generatePath = (fileInfo: FilePath): string => {
     return fileInfo.dir.concat(fileInfo.fileName).concat(fileInfo.fileExt);
   };
 
+  /**
+   * Generate a log message with a timestamp and delimiter.
+   * @param {string} msg - The log message to include in the log.
+   * @returns {string} The formatted log message.
+   * @private
+   */
   private static generateLogMessage = (msg: string): string => {
     return (
       new Date().toISOString() +
@@ -42,75 +62,92 @@ class Logger {
     );
   };
 
-  // Function to print log messages
+  /**
+   * Print log messages to the console with the specified style or default style.
+   * @param {string} msg - The log message to display on the console.
+   * @param {LogType} type - The type of log ('GENERAL', 'ERROR', or 'HEADER').
+   * @param {ConsoleStyle} style - Optional console style for the log message.
+   * @private
+   */
+  private static printConsoleMessage = (
+    msg: string,
+    type: LogType,
+    style?: ConsoleStyle
+  ) => {
+    const headerStyle = style || textStyles.BgGreen + textStyles.FgBlack,
+      generalStyle = style || textStyles.FgCyan,
+      headerText = headerStyle + msg + textStyles.Reset,
+      generalText = generalStyle + msg + textStyles.Reset;
+
+    if (type === "ERROR")
+      console.error(
+        (style || textStyles.BgRed + textStyles.FgBlack) +
+          msg +
+          textStyles.Reset
+      );
+    else console.log(type === "GENERAL" ? generalText : headerText);
+  };
+
+  /**
+   * Write the log message to the appropriate log file based on the log type.
+   * @param {string} msg - The log message to write to the log file.
+   * @param {LogType} type - The type of log ('GENERAL', 'ERROR', or 'HEADER').
+   * @private
+   */
+  private static writeLogMessage = (msg: string, type: LogType) => {
+    const logMsg = this.generateLogMessage(msg),
+      logPath: FilePath =
+        type === "ERROR" ? this._paths.error : this._paths.general;
+    fs.appendFileSync(this.generatePath(logPath), logMsg);
+  };
+
+  /**
+   * Print the log message, write it to the log file, and return the log status.
+   * @param {string} msg - The log message to be printed and written to the log file.
+   * @param {LogType} type - The type of log ('GENERAL', 'ERROR', or 'HEADER').
+   * @param {{ style?: ConsoleStyle }} options - Optional object with a 'style' property for console message styling.
+   * @returns {LogReturnType} The log status indicating the success or error.
+   */
   public static print(
     msg: string,
     type: LogType,
     options?: { style?: ConsoleStyle }
   ): LogReturnType {
-    let returnCode: LogReturnType = "SUCCESS_LOG";
-    // Creating a formatted log message with timestamp, message, and a newline character
+    let returnCode: LogReturnType =
+      type === "ERROR" ? "ERROR_LOG" : "SUCCESS_LOG";
+
     const logMsg = this.generateLogMessage(msg);
 
-    // Assigning styles based on options or default styles
-    const headerStyle =
-        options?.style || textStyles.BgGreen + textStyles.FgBlack,
-      gneralStyle = options?.style || textStyles.FgCyan;
+    const logDir =
+      type === "ERROR" ? this._paths.error.dir : this._paths.general.dir;
 
-    // Creating formatted header and general text with respective styles
-    const headerText = headerStyle + msg + textStyles.Reset,
-      generalText = gneralStyle + msg + textStyles.Reset;
+    if (!fs.existsSync(logDir)) fs.mkdirSync(logDir);
 
-    switch (type) {
-      case "ERROR":
-        try {
-          const errorLogPath = this.generatePath(this._paths.error);
-          // Appending the log message to the error log file
-          fs.appendFileSync(errorLogPath, logMsg);
-          // Printing the error message to the console with the specified style or default style
-          console.error(
-            (options?.style || textStyles.BgRed + textStyles.FgBlack) +
-              msg +
-              textStyles.Reset
-          );
-          returnCode = "ERROR_LOG";
-        } catch (err) {
-          console.error(err);
-          returnCode = "FILE_WRITE_ERROR";
-        }
-        break;
+    this.writeLogMessage(logMsg, type);
 
-      default:
-        const generalLogPath = this.generatePath(this._paths.general),
-          generalLogDir = this._paths.general.dir;
-
-        // Appending the log message to the general log file
-        if (fs.existsSync(generalLogDir))
-          fs.appendFileSync(generalLogPath, logMsg);
-        else {
-          fs.mkdirSync(this._paths.general.dir);
-          fs.appendFileSync(generalLogPath, logMsg);
-        }
-        // Determining the console output based on the log type and printing it to the console
-        const consoleOutput = type === "GENERAL" ? generalText : headerText;
-        console.log(consoleOutput);
-    }
+    this.printConsoleMessage(msg, type, options?.style);
 
     return returnCode;
   }
 
-  // Setter for updating the log file paths
+  /**
+   * Setter for updating the log file paths for 'general' and 'error' logs.
+   * @param {{ general?: FilePath; error?: FilePath }} paths - Object with updated log file paths.
+   */
   public static set paths(paths: { general?: FilePath; error?: FilePath }) {
-    // If the general log file path is provided, update the general path
     if (paths.general !== undefined) this._paths.general = paths.general;
-    // If the general log file path is provided, update the general path
+
     if (paths.error !== undefined) this._paths.error = paths.error;
   }
 
-  // Getter for accessing the log file paths
+  /**
+   * Getter for accessing the current log file paths for 'general' and 'error' logs.
+   * @returns {{ general: FilePath; error: FilePath }} Object containing the current log file paths.
+   */
   public static get paths() {
     return this._paths;
   }
 }
 
+// Exporting the Logger class to be used by other modules.
 export { Logger };
